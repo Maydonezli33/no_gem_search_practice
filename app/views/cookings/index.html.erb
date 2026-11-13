@@ -1,0 +1,39 @@
+<h1>料理一覧</h1>
+
+<%= form_with url: cookings_path, method: :get do |f| %>
+  <div>
+    <%= f.label :title, "料理名" %>
+    <%= f.text_field :title, value: params[:title] %>
+  </div>
+
+  <div>
+    <%= f.label :genre_id, "ジャンル" %>
+    <%= f.collection_select :genre_id, Genre.all, :id, :name,
+        { include_blank: "すべて" },
+        { selected: params[:genre_id] } %>
+  </div>
+
+  <%= f.submit "検索" %>
+<% end %>
+
+<hr>
+
+<p><%= link_to "新規料理", new_cooking_path %></p>
+<p><%= link_to "新規ジャンル", new_genre_path %></p>
+
+<h2>検索結果</h2>
+
+<% @cookings.each do |cooking| %>
+  <div>
+    <h3><%= link_to cooking.title, cooking_path(cooking) %></h3>
+    <p>説明: <%= cooking.content %></p>
+    <p>ジャンル: <%= cooking.genre.name %></p>
+  </div>
+  <hr>
+<% end %>
+
+<% if @cookings.empty? %>
+  <p>該当する料理がありません。</p>
+<% end %>
+
+<%= button_to "ログアウト", destroy_user_session_path, method: :delete %>
